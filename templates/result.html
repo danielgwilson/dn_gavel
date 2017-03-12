@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+   <body>
+
+      <table align = "left">
+         {% for key, value in result.items() %}
+
+            <tr>
+                <th align = "left"> {{ key }} </th>
+                {% if key == "Resume" or key == "Portfolio/personal website/github" or key == "Other" %}
+                    <td align = "left"> <a href = "{{ value }}" target = "_blank">{{ value }}</a> </td>
+                {% else %}
+                    <td align = "left"> {{ value }} </td>
+                {% endif %}
+            </tr>
+
+         {% endfor %}
+      </table>
+
+   </body>
+</html>

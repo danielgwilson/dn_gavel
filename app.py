@@ -7,12 +7,15 @@ This file creates your application.
 """
 
 import os
+import csv
+from collections import OrderedDict
 from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'this_should_be_configured')
 
+app.debug = True
 
 ###
 # Routing for your application.
@@ -21,7 +24,8 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'this_should_be_configur
 @app.route('/')
 def home():
     """Render website's home page."""
-    return render_template('home.html')
+
+    return 'hihihihi'
 
 
 @app.route('/about/')
@@ -43,7 +47,17 @@ def send_text_file(file_name):
 
 @app.route('/<app_id>')
 def id_page(app_id):
-    return render_template('about.html')
+    fin = open('s_uuid.csv', 'rt')
+    reader = csv.reader(fin, delimiter=',', quotechar='"')
+    user_table = OrderedDict()
+    for row in reader:
+        user_table[row[-1]] = row
+    app.logger.debug(user_table[app_id])
+    user = OrderedDict()
+    for index, item in enumerate(user_table[app_id]):
+        user[user_table['UUID'][index]] = item
+
+    return render_template('result.html', result = user)
 
 @app.after_request
 def add_header(response):
@@ -60,7 +74,6 @@ def add_header(response):
 def page_not_found(error):
     """Custom 404 page."""
     return render_template('404.html'), 404
-
 
 if __name__ == '__main__':
     app.run(debug=True)
